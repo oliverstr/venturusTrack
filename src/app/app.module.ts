@@ -1,16 +1,41 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, APP_INITIALIZER, Injector } from '@angular/core';
 
 import { AppComponent } from './app.component';
+import { AppRoutingModule } from './app-routing.module';
+import { MainComponent } from './main/main.component';
+import { TokenComponent } from './token/token.component';
+import { AuthorizationService } from './services/authorization.service';
+import { ConnectionService } from './services/connection.service';
+import { HttpClientModule } from '@angular/common/http';
+import { AppConfig } from './app.config';
+
+export function initConfig(config: AppConfig) {
+  return () => config.load();
+}
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    MainComponent,
+    TokenComponent
   ],
   imports: [
-    BrowserModule
+    HttpClientModule,
+    BrowserModule,
+    AppRoutingModule
   ],
-  providers: [],
+  providers: [
+    AuthorizationService,
+    ConnectionService,
+    AppConfig,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initConfig,
+      deps: [AppConfig],
+      multi: true
+    },
+  ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}
