@@ -9,6 +9,7 @@ import { AuthorizationService } from './services/authorization.service';
 import { ConnectionService } from './services/connection.service';
 import { HttpClientModule } from '@angular/common/http';
 import { AppConfig } from './app.config';
+import { HttpModule } from '@angular/http';
 
 export function initConfig(config: AppConfig) {
   return () => config.load();
@@ -23,7 +24,8 @@ export function initConfig(config: AppConfig) {
   imports: [
     HttpClientModule,
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpModule
   ],
   providers: [
     AuthorizationService,

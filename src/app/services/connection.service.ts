@@ -1,16 +1,15 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpHeaders } from '@angular/common/http';
+import { ResponseContentType, Http, Headers } from '@angular/http';
 import { AuthorizationService } from './authorization.service';
 import { Observable } from 'rxjs/Observable';
-import { of } from 'rxjs/observable/of';
 import { AppConfig } from '../app.config';
-
 @Injectable()
 export class ConnectionService {
 
   constructor(
     private _auth: AuthorizationService,
-    private _http: HttpClient,
+    private _http: Http,
     private _config: AppConfig
   ) { }
 
@@ -36,24 +35,40 @@ export class ConnectionService {
     }
   }
 
-  getUserData(): Observable<any> {
-    const url = `https://api.instagram.com/v1/users/self/?access_token=${this._auth.token}`;
-    return this._http.get<any>(url);
+  getTagMedia(tag: string): Observable<Object[]> {
+    const header = new Headers();
+    const url = `https://www.instagram.com/explore/tags/${tag}/`;
+    return this._http.get(url, { headers: header, responseType: ResponseContentType.Text })
+    .map(data => {
+      const posts = JSON.parse(data['_body'].split('"media": ')[1].split(', "top_posts": ')[0]).nodes;
+      posts.forEach(post => {
+        this.getUserByPostCode(post.code).subscribe(user => post['user'] = user);
+      });
+      return posts;
+    });
   }
 
-  getLocationLastMedia(locationID: string): Observable<any> {
-    const url = `https://api.instagram.com/v1/locations/${locationID}/media/recent?access_token=${this._auth.token}`;
-    return this._http.get<any>(url);
+  getLocationMedia(location: string): Observable<Object[]> {
+    const header = new Headers();
+    const url = `https://www.instagram.com/explore/locations/${location}/`;
+    return this._http.get(url, { headers: header, responseType: ResponseContentType.Text })
+    .map(data => {
+      const posts = JSON.parse(data['_body'].split('"media": ')[1].split(', "top_posts": ')[0]).nodes;
+      posts.forEach(post => {
+        this.getUserByPostCode(post.code).subscribe(user => post['user'] = user);
+      });
+      return posts;
+    });
   }
 
-  getLocationDetails(locationID: string): Observable<any> {
-    const url = `https://api.instagram.com/v1/locations/${locationID}?access_token=${this._auth.token}`;
-    return this._http.get<any>(url);
-  }
-
-  getTagMedia(tag: string): Observable<any> {
-    const url = `https://api.instagram.com/v1/tags/${tag}/media/recent?access_token=${this._auth.token}`;
-    return this._http.get<any>(url);
+  getUserByPostCode(postCode: string): Observable<any> {
+    const header = new Headers();
+    const url = `https://www.instagram.com/p/${postCode}/`;
+    return this._http.get(url, { headers: header, responseType: ResponseContentType.Text })
+    .map(data => {
+      const allUser = data['_body'].split(', "owner": ');
+      return JSON.parse(allUser[allUser.length - 1].split(', "is_ad": ')[0]);
+    });
   }
 
 }

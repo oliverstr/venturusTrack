@@ -1,17 +1,17 @@
 <div class="container">
-  <div class="instagram-signature">#Venturus</div>
+  <div class="instagram-signature">#{{tag}}</div>
   <div *ngIf="selectedMedia" class="content-wrapper">
-    <img [src]="selectedMedia.images.standard_resolution.url" alt="Imagem do instagram" class="media-img" [ngClass]="{'slit-in-vertical' : inAnimation, 'rotate-out-2-cw' : outAnimation}">
+    <img [src]="selectedMedia.display_src" alt="Imagem do instagram" class="media-img" [ngClass]="{'slit-in-vertical' : inAnimation, 'rotate-out-2-cw' : outAnimation}">
     <div class="caption" [ngClass]="{'fade-in-right' : inAnimation}">
       <div class="user-profile">
-        <img src="{{selectedMedia.caption.from.profile_picture}}" alt="Profile Picture">
+        <img src="{{selectedMedia.user.profile_pic_url}}" alt="Profile Picture">
         <br>
       </div>
       <div>
-        <b>{{selectedMedia.caption.from.username}}</b>
+        <b>{{selectedMedia.user.username}}</b>
         <br>
-        <small>{{selectedMedia.caption.from.full_name}}</small>
-        <p>{{selectedMedia.caption.text}}</p>
+        <small>{{selectedMedia.user.full_name}}</small>
+        <p>{{selectedMedia.caption}}</p>
       </div>
     </div>
   </div>

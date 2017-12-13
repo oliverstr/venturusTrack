@@ -17,36 +17,42 @@ export class MainComponent implements OnInit {
   public inAnimation = true;
   public outAnimation = false;
   public selectedMedia: Media;
+  public tag = 'venturus';
 
   ngOnInit() {
-    this.checkAuthorization();
-    this.getMediaItems();
+    this.getMediaItems('venturus');
   }
 
   checkAuthorization() {
     this._connection.getToken();
   }
 
-  getMediaItems(): void {
-    this._connection.getTagMedia('venturus').subscribe(data => {
-      this._mediaItems.push(data);
-      this.selectedMedia = this._mediaItems[0].data[0];
+  getMediaItems(tag: string): void {
+    this._connection.getTagMedia(tag).subscribe(
+      data => {
+      this._mediaItems = data;
+      console.log(this._mediaItems);
+      this.selectedMedia = this._mediaItems[0];
       this.switchMedia();
-    }, err => {
-      if (err.status === 400) {
-        this._connection.redirectToAuth();
-      }
-      console.log(err);
-    });
+    }, err => console.log(err));
+  }
+
+  getLocationItems(): void {
+    this._connection.getLocationMedia(ConnectionService.LOCATIONS.venturus).subscribe(
+      data => {
+      this._mediaItems = data;
+      this.selectedMedia = this._mediaItems[0];
+      this.switchMedia();
+    }, err => console.log(err));
   }
 
   switchMedia(): void {
     setTimeout(() => {
       this.animate('out');
       setTimeout(_ => {
-        this._mediaIndex = this._mediaIndex === (this._mediaItems[0].data.length - 1) ? 0 : +1;
-        this.selectedMedia = this._mediaItems[0].data[this._mediaIndex];
-      }, 600); // Wait for out transition complete to load other image
+        this._mediaIndex = this._mediaIndex === (this._mediaItems.length - 1) ? 0 : this._mediaIndex + 1;
+        this.selectedMedia = this._mediaItems[this._mediaIndex];
+      }, 500); // Wait for out transition complete to load other image
       setTimeout(_ => {
         this.animate('in');
       }, 600); // Wait for in transition complete to load other image
