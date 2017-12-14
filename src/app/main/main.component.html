@@ -2,11 +2,8 @@
   <div class="instagram-signature">#{{tag}}</div>
   <div *ngIf="selectedMedia" class="content-wrapper">
     <img [src]="selectedMedia.display_src" alt="Imagem do instagram" class="media-img" [ngClass]="{'slit-in-vertical' : inAnimation, 'rotate-out-2-cw' : outAnimation}">
-    <div class="caption" [ngClass]="{'fade-in-right' : inAnimation}">
-      <div class="user-profile">
-        <img src="{{selectedMedia.user.profile_pic_url}}" alt="Profile Picture">
-        <br>
-      </div>
+    <div *ngIf="selectedMedia.user" class="caption" [ngClass]="{'fade-in-right' : inAnimation}">
+      <img src="{{selectedMedia.user.profile_pic_url}}" alt="Profile Picture">
       <div>
         <b>{{selectedMedia.user.username}}</b>
         <br>
@@ -16,4 +13,12 @@
     </div>
   </div>
   <div class="venturus-signature"></div>
+  <!-- <div class="settings">
+    <a (click)="toggleSettings">Configurações</a>
+    <div class="dropdown-settings">
+      <form #f>
+        <input type="text" [(ngModel)]="tag" placeholder="Hashtag">
+      </form>   
+    </div>
+  </div> -->
 </div>
