@@ -16,7 +16,7 @@ export class MainComponent implements OnInit {
   public inAnimation = true;
   public outAnimation = false;
   public selectedMedia;
-  public tag = 'venturus';
+  public tag = 'boracurtirvnt';
   public durationSeconds = 5;
   public refreshMinutes = 5;
 

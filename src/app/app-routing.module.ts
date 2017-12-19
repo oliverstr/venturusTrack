@@ -7,6 +7,7 @@ const routes: Routes = [
   { path: 'main', component: MainComponent },
   { path: 'token', component: TokenComponent },
   { path: '', redirectTo: '/main', pathMatch: 'full' },
+  { path: '**', redirectTo: '/main', pathMatch: 'full' },
 ];
 
 @NgModule({
