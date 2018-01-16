@@ -1,5 +1,5 @@
 <div class="container">
-  <div class="instagram-signature">#{{tag}}</div>
+  <div class="instagram-signature">#{{config.tag}}</div>
   <div *ngIf="selectedMedia" class="content-wrapper">
     <img [src]="selectedMedia.node.display_url" alt="Imagem do instagram" class="media-img" [ngClass]="{'slit-in-vertical' : inAnimation, 'rotate-out-2-cw' : outAnimation}">
     <div *ngIf="selectedMedia.user" class="caption" [ngClass]="{'fade-in-right' : inAnimation}">
@@ -13,12 +13,22 @@
     </div>
   </div>
   <div class="venturus-signature"></div>
-  <!-- <div class="settings">
-    <a (click)="toggleSettings">Configurações</a>
-    <div class="dropdown-settings">
-      <form #f>
-        <input type="text" [(ngModel)]="tag" placeholder="Hashtag">
+  <div class="settings">
+    <a (click)="toggleSettings()"><img src="assets/img/fa-cog.png" alt="Config" style="color: rgba(0,0,0,0.5)"></a>
+    <div *ngIf="displaySettings" class="dropdown-settings">
+      <form #form="ngForm" (ngSubmit)="setNewConfig()">
+
+        <label>Hashtag</label>
+        <input type="text" [(ngModel)]="newConfig.tag" name="tag" placeholder="Hashtag" required>
+
+        <label>Duration seconds</label>
+        <input type="number" [(ngModel)]="newConfig.durationSeconds" name="duration" placeholder="Duration time" required>
+
+        <label>Refresh minutes</label>
+        <input type="number" [(ngModel)]="newConfig.refreshMinutes" name="refresh" placeholder="Refresh time" required>
+        
+        <button type="submit" [disabled]="!form.form.valid">Save</button>
       </form>   
     </div>
-  </div> -->
+  </div>
 </div>

@@ -16,14 +16,19 @@ export class MainComponent implements OnInit {
   public inAnimation = true;
   public outAnimation = false;
   public selectedMedia;
-  public tag = 'boracurtirvnt';
-  public durationSeconds = 5;
-  public refreshMinutes = 5;
+  public config = {
+    mediaItemsInterval: undefined, switchMediaInteral: undefined
+  };
+  public newConfig;
+  public displaySettings = false;
 
   ngOnInit() {
-    this.getMediaItems(this.tag);
-    setInterval(() => { this.getMediaItems(this.tag); }, ( this.refreshMinutes * 60000 ));
-    setInterval(this.switchMedia.bind(this), ( this.durationSeconds * 1000 ));
+    this.setConfig();
+    this.getMediaItems(this.config['tag']);
+    this.config.mediaItemsInterval = setInterval(() => {
+       this.getMediaItems(this.config['tag']); }
+      , ( this.config['refreshMinutes'] * 60000 ));
+    this.config.switchMediaInteral = setInterval(this.switchMedia.bind(this), ( this.config['durationSeconds'] * 1000 ));
   }
 
   checkAuthorization() {
@@ -55,7 +60,7 @@ export class MainComponent implements OnInit {
       setTimeout(() => {
         this._mediaIndex = this._mediaIndex === (this._mediaItems.length - 1) ? 0 : this._mediaIndex + 1;
         this.selectedMedia = this._mediaItems[this._mediaIndex];
-      }, 450); // Wait for out transition complete to load other image
+      }, 500); // Wait for out transition complete to load other image
       setTimeout(() => {
         this.animate('in');
       }, 500); // Wait for in transition complete to load other image
@@ -74,6 +79,33 @@ export class MainComponent implements OnInit {
         break;
       }
     }
+  }
+
+  setNewConfig() {
+    clearInterval(this.config.switchMediaInteral);
+    clearInterval(this.config.mediaItemsInterval);
+    localStorage['tag'] = this.newConfig.tag;
+    localStorage['durationSeconds'] = this.newConfig.durationSeconds;
+    localStorage['refreshMinutes'] = this.newConfig.refreshMinutes;
+    this.config = this.newConfig;
+    this.ngOnInit();
+    this.toggleSettings();
+  }
+
+  toggleSettings() {
+    this.displaySettings = this.displaySettings ? false : true;
+    if (this.displaySettings) {
+      setTimeout(() => {
+        this.displaySettings = false;
+      }, 10000);
+    }
+  }
+
+  setConfig() {
+    this.config['tag'] = localStorage['tag'] || 'boracurtirvnt';
+    this.config['durationSeconds'] = localStorage['durationSeconds'] || 5;
+    this.config['refreshMinutes'] = localStorage['refreshMinutes'] || 5;
+    this.newConfig = Object.assign({}, this.config);
   }
 
 }
