@@ -40,9 +40,10 @@ export class ConnectionService {
     const url = `https://www.instagram.com/explore/tags/${tag}/`;
     return this._http.get(url, { headers: header, responseType: ResponseContentType.Text })
     .map(data => {
-      const posts = JSON.parse(data['_body'].split('"media": ')[1].split(', "top_posts": ')[0]).nodes;
+      const posts = JSON.parse(data['_body'].split('_sharedData = ')[1].split(';</script>')[0])
+      ['entry_data']['TagPage'][0]['graphql']['hashtag']['edge_hashtag_to_media']['edges'];
       posts.forEach(post => {
-        this.getUserByPostCode(post.code).subscribe(user => post['user'] = user);
+        this.getUserByPostCode(post['node']['shortcode']).subscribe(user => post['user'] = user);
       });
       return posts;
     });
@@ -53,9 +54,10 @@ export class ConnectionService {
     const url = `https://www.instagram.com/explore/locations/${location}/`;
     return this._http.get(url, { headers: header, responseType: ResponseContentType.Text })
     .map(data => {
-      const posts = JSON.parse(data['_body'].split('"media": ')[1].split(', "top_posts": ')[0]).nodes;
+      const posts = JSON.parse(data['_body'].split('_sharedData = ')[1].split(';</script>')[0])
+      ['entry_data']['TagPage'][0]['graphql']['hashtag']['edge_hashtag_to_media']['edges'];
       posts.forEach(post => {
-        this.getUserByPostCode(post.code).subscribe(user => post['user'] = user);
+        this.getUserByPostCode(post['node']['shortcode']).subscribe(user => post['user'] = user);
       });
       return posts;
     });

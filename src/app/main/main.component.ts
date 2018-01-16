@@ -55,7 +55,7 @@ export class MainComponent implements OnInit {
       setTimeout(() => {
         this._mediaIndex = this._mediaIndex === (this._mediaItems.length - 1) ? 0 : this._mediaIndex + 1;
         this.selectedMedia = this._mediaItems[this._mediaIndex];
-      }, 500); // Wait for out transition complete to load other image
+      }, 450); // Wait for out transition complete to load other image
       setTimeout(() => {
         this.animate('in');
       }, 500); // Wait for in transition complete to load other image
