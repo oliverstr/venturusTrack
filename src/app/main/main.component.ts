@@ -102,7 +102,7 @@ export class MainComponent implements OnInit {
   }
 
   setConfig() {
-    this.config['tag'] = localStorage['tag'] || 'boracurtirvnt';
+    this.config['tag'] = localStorage['tag'] || 'venturus';
     this.config['durationSeconds'] = localStorage['durationSeconds'] || 5;
     this.config['refreshMinutes'] = localStorage['refreshMinutes'] || 5;
     this.newConfig = Object.assign({}, this.config);
