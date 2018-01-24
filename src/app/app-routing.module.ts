@@ -4,10 +4,9 @@ import { TokenComponent } from './token/token.component';
 import { MainComponent } from './main/main.component';
 
 const routes: Routes = [
-  { path: 'main', component: MainComponent },
+  { path: ':hashtag', component: MainComponent },
+  { path: '', component: MainComponent },
   { path: 'token', component: TokenComponent },
-  { path: '', redirectTo: '/main', pathMatch: 'full' },
-  { path: '**', redirectTo: '/main', pathMatch: 'full' },
 ];
 
 @NgModule({

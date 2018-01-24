@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthorizationService } from '../services/authorization.service';
 import { ConnectionService } from '../services/connection.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-main',
@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 })
 export class MainComponent implements OnInit {
 
-  constructor(private _connection: ConnectionService, private _router: Router) { }
+  constructor(private _connection: ConnectionService, private _route: ActivatedRoute, private _router: Router) { }
 
   private _mediaItems = [];
   private _mediaIndex = 0;
@@ -23,12 +23,15 @@ export class MainComponent implements OnInit {
   public displaySettings = false;
 
   ngOnInit() {
-    this.setConfig();
-    this.getMediaItems(this.config['tag']);
-    this.config.mediaItemsInterval = setInterval(() => {
-       this.getMediaItems(this.config['tag']); }
-      , ( this.config['refreshMinutes'] * 60000 ));
-    this.config.switchMediaInteral = setInterval(this.switchMedia.bind(this), ( this.config['durationSeconds'] * 1000 ));
+    this._route.params.subscribe(params => {
+      this.config['tag'] = params['hashtag'] || 'venturus';
+      this.setConfig();
+      this.getMediaItems(this.config['tag']);
+      this.config.mediaItemsInterval = setInterval(() => {
+          this.getMediaItems(this.config['tag']); }
+        , ( this.config['refreshMinutes'] * 60000 ));
+      this.config.switchMediaInteral = setInterval(this.switchMedia.bind(this), ( this.config['durationSeconds'] * 1000 ));
+    });
   }
 
   checkAuthorization() {
@@ -84,12 +87,11 @@ export class MainComponent implements OnInit {
   setNewConfig() {
     clearInterval(this.config.switchMediaInteral);
     clearInterval(this.config.mediaItemsInterval);
-    localStorage['tag'] = this.newConfig.tag;
     localStorage['durationSeconds'] = this.newConfig.durationSeconds;
     localStorage['refreshMinutes'] = this.newConfig.refreshMinutes;
     this.config = this.newConfig;
-    this.ngOnInit();
     this.toggleSettings();
+    this._router.navigate(['', this.newConfig.tag]);
   }
 
   toggleSettings() {
@@ -102,7 +104,6 @@ export class MainComponent implements OnInit {
   }
 
   setConfig() {
-    this.config['tag'] = localStorage['tag'] || 'venturus';
     this.config['durationSeconds'] = localStorage['durationSeconds'] || 5;
     this.config['refreshMinutes'] = localStorage['refreshMinutes'] || 5;
     this.newConfig = Object.assign({}, this.config);
